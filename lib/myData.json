@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "genre": "Science Fiction" 
+  },{
+    "title": "The Princess Bride",
+    "author": "William Goldman",
+    "genre": "Fantasy" 
+  },{
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "genre": "Science Fiction" 
+  },{
+    "title": "1984",
+    "author": "George Orwell",
+    "genre": "Science Fiction" 
+  },{
+    "title": "Stranger in a Strange Land",
+    "author": "Robert Heinlein",
+    "genre": "Science Fiction" 
+  }
+]
