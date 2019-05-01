@@ -1,24 +1,55 @@
+let data = [
+  {
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "genre": "Science Fiction" 
+  },{
+    "title": "The Princess Bride",
+    "author": "William Goldman",
+    "genre": "Fantasy" 
+  },{
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "genre": "Science Fiction" 
+  },{
+    "title": "1984",
+    "author": "George Orwell",
+    "genre": "Science Fiction" 
+  },{
+    "title": "Stranger in a Strange Land",
+    "author": "Robert Heinlein",
+    "genre": "Science Fiction" 
+  }
+]
 
-function getAll(data) {
+
+const getAll = () => {
   return data;
 }
 
-function getOne(data, name) {
-  let tempItem = data.filter((item) => {
-    if (item.title.toLowerCase() == name.title.toLowerCase()) {
-      return item;
-    }  
+const getOne = (name) => {
+  return data.find((item) => {
+    return item.title.toLowerCase() == name.toLowerCase();
   })
-  return tempItem;
 }
 
-function deleteOne(data, name) {
-  let tempItem = data.filter((item) => {
-    if (item.title.toLowerCase() !== name.title.toLowerCase()) {
+const deleteOne = (name) => {
+  data = data.filter((item) => {
+    if (item.title.toLowerCase() !== name.toLowerCase()) {
       return item;
     }
   })
-  return tempItem;
+
+  return data;
+}
+
+const addBook = (addition) => {
+  data.push({
+    "title" : addition.title,
+    "author" : addition.author,
+    "genre" : addition.genre
+  })
+  return data;
 }
 
 
@@ -26,7 +57,8 @@ function deleteOne(data, name) {
 module.exports = {
   getAll,
   getOne,
-  deleteOne
+  deleteOne,
+  addBook
 }
 
 

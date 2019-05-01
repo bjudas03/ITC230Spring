@@ -1,50 +1,58 @@
 const http = require('http');
 const fs = require('fs');
 const qs = require('querystring');
+const express = require('express');
+const bodyParser = require('body-parser');
+const handlebars = require('express-handlebars');
+const books = require('./lib/myData.json');
 
-const books = require('./lib/myData.json')
+const app = express();
+
+app.engine(".html", handlebars({extname: '.html'}));
+app.set('view engine', ".html");
+app.set('port', process.env.PORT || 8080);
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(__dirname + 'public'));
 
 const routes = require('./routes');
 
-http.createServer(function(req,res) {
-  const url = req.url.toLowerCase().split("?");
-  let path = url[0];
-  let query = qs.parse(url[1]);
 
-  switch(path) {
-    case '/':
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      fs.readFile('public/home.html', function(err, data) {
-        if (err) return err;
-        res.write(data);
-        res.end();
-      })
-      break;
-    case '/about':
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      fs.readFile('public/about.html', function(err, data) {
-        if (err) return err;
-        res.write(data);
-        res.end();
-      })
-      break;
-    case '/getall':
-      var data = routes.getAll(books);
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end(JSON.stringify(data));
-      break;
-    case '/get': 
-      var data = routes.getOne(books, query);
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end(JSON.stringify(data))
-      break;
-    case '/delete':
-      var data = routes.deleteOne(books, query);
-      res.writeHead(200, {'Content-Type' : 'text/plain'})
-      res.end("You have removed:" + JSON.stringify(query.title) + "\n" + JSON.stringify(data));
-    default:
-      res.writeHead(404, {'Content-Type': 'text/html'});
-      res.end("<h1>No. I don't wanna show you this. Bleargh!</h1>")
-      break;
-  };
-}).listen(process.env.PORT || 3000);
+
+
+app.get('/', (req, res) => {
+  let data = routes.getAll();
+  res.render('home', {'books': data})
+});
+
+app.get('/about', (req, res) => {
+  res.render('about');
+})
+
+app.get('/details', (req, res) => {
+  let data = routes.getOne(req.query.title);
+  res.render('details', {"title": req.query.title, 'book': data});
+})
+
+app.get('/delete', (req, res) => {
+  let data = routes.deleteOne(req.query.title);
+  res.render('home', {"title":req.query.title,"books": data})
+})
+
+app.get('/add', (req, res) => {
+  let addition = {
+    "title" : req.query.title,
+    "author" : req.query.author,
+    "genre" : req.query.genre
+  }
+  let data = routes.addBook(addition);
+  res.render('home', {'books': data});
+})
+
+app.use( (req, res) => {
+  res.type('text/plain');
+  res.status(404);
+  res.send("These are not the pages you are looking for.");
+})
+
+app.listen(app.get('port'));
