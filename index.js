@@ -1,10 +1,12 @@
-const http = require('http');
-const fs = require('fs');
-const qs = require('querystring');
+// const http = require('http');
+// const fs = require('fs');
+// const qs = require('querystring');
 const express = require('express');
 const bodyParser = require('body-parser');
 const handlebars = require('express-handlebars');
-const books = require('./lib/myData.json');
+// const books = require('./lib/myData.json');
+
+const Book = require("./models/Book.js");
 
 const app = express();
 
@@ -22,6 +24,10 @@ const routes = require('./routes');
 
 app.get('/', (req, res) => {
   let data = routes.getAll();
+  Book.find({}, (err, items) => {
+    if (err) return next(err);
+    console.log(items);
+  });
   res.render('home', {'books': data})
 });
 
@@ -46,7 +52,8 @@ app.get('/add', (req, res) => {
     "genre" : req.query.genre
   }
   let data = routes.addBook(addition);
-  res.render('home', {'books': data});
+  console.log(data)
+  res.render('home', {'books': data.data, 'msg': data.msg});
 })
 
 app.use( (req, res) => {

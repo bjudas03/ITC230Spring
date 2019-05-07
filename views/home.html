@@ -18,6 +18,11 @@
   <li><a href="/details/?title={{title}}">{{title}}</a></li>
 {{/each}}
 
+
+{{#if msg}}
+  {{msg}}
+{{/if}}
+
 <h3>Not seeing what you're looking for? Add a book to our data set!</h3>
 <form action="/add" method="GET">
   <label for="title">What is the book title?</label>

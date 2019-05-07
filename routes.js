@@ -1,4 +1,4 @@
-let data = [
+let books = [
   {
     "title": "Dune",
     "author": "Frank Herbert",
@@ -24,17 +24,17 @@ let data = [
 
 
 const getAll = () => {
-  return data;
+  return books;
 }
 
 const getOne = (name) => {
-  return data.find((item) => {
+  return books.find((item) => {
     return item.title.toLowerCase() == name.toLowerCase();
   })
 }
 
 const deleteOne = (name) => {
-  data = data.filter((item) => {
+  data = books.filter((item) => {
     if (item.title.toLowerCase() !== name.toLowerCase()) {
       return item;
     }
@@ -44,17 +44,31 @@ const deleteOne = (name) => {
 }
 
 const addBook = (addition) => {
-  data.push({
-    "title" : addition.title,
-    "author" : addition.author,
-    "genre" : addition.genre
-  })
-  return data;
+  //check to see if addition is alreay in data array
+  //returns 'TRUE' if in array, 'False' if NOT in array
+  let checkTitle = books.every((item) => {
+    return item.title.toLowerCase() !== addition.title.toLowerCase();
+  });
+
+  let msg = null;
+
+  if (checkTitle) {
+    msg = "You added " + addition.title + " to the data set! Check it out in the link!"
+    books.push({
+      "title" : addition.title,
+      "author" : addition.author,
+      "genre" : addition.genre
+    })
+  } else {
+    msg = "You have tried adding " + addition.title + " but that book is already in the system."
+  }
+  return {data: books, msg: msg};
 }
 
 
 
 module.exports = {
+  books,
   getAll,
   getOne,
   deleteOne,
