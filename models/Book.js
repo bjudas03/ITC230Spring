@@ -3,7 +3,7 @@ const config = require('../config');
 
 const connectionString = "mongodb+srv://"+ config.dbuser + ":" + config.dbPassword + "@cluster0-iejfy.mongodb.net/test?retryWrites=true"
 
-console.log(config);
+// console.log(config);
 
 mongoose.connect(connectionString, {
   dbName: config.dbName,

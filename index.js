@@ -25,7 +25,7 @@ const routes = require('./routes');
 app.get('/', (req, res) => {
   let data = routes.getAll();
   Book.find({}, (err, items) => {
-    if (err) return next(err);
+    if (err) return err;
     console.log(items);
   });
   res.render('home', {'books': data})
@@ -42,7 +42,7 @@ app.get('/details', (req, res) => {
 
 app.get('/delete', (req, res) => {
   let data = routes.deleteOne(req.query.title);
-  res.render('home', {"title":req.query.title,"books": data})
+  res.render('home', {"title":req.query.title, "books": data})
 })
 
 app.get('/add', (req, res) => {
@@ -52,7 +52,7 @@ app.get('/add', (req, res) => {
     "genre" : req.query.genre
   }
   let data = routes.addBook(addition);
-  console.log(data)
+  // console.log(data)
   res.render('home', {'books': data.data, 'msg': data.msg});
 })
 
