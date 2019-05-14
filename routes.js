@@ -45,7 +45,7 @@ const deleteOne = (name) => {
 
 const addBook = (addition) => {
   //check to see if addition is alreay in data array
-  //returns 'TRUE' if in array, 'False' if NOT in array
+  //returns 'TRUE' if NOT in array, 'False' if in array
   let checkTitle = books.every((item) => {
     return item.title.toLowerCase() !== addition.title.toLowerCase();
   });

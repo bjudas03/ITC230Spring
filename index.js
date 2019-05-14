@@ -1,10 +1,6 @@
-// const http = require('http');
-// const fs = require('fs');
-// const qs = require('querystring');
 const express = require('express');
 const bodyParser = require('body-parser');
 const handlebars = require('express-handlebars');
-// const books = require('./lib/myData.json');
 
 const Book = require("./models/Book.js");
 
@@ -18,17 +14,16 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + 'public'));
 
 const routes = require('./routes');
+const dbMethods = require("./dbMethods");
 
 
 
 
-app.get('/', (req, res) => {
-  let data = routes.getAll();
-  Book.find({}, (err, items) => {
-    if (err) return err;
-    console.log(items);
+app.get('/', (req, res, next) => {
+  dbMethods.getAll()
+    .then((data) => {
+      res.render('home', {'books': data});
   });
-  res.render('home', {'books': data})
 });
 
 app.get('/about', (req, res) => {
@@ -36,25 +31,43 @@ app.get('/about', (req, res) => {
 })
 
 app.get('/details', (req, res) => {
-  let data = routes.getOne(req.query.title);
-  res.render('details', {"title": req.query.title, 'book': data});
+  dbMethods.getOne(req.query.title)
+    .then((data) => {
+      res.render('details', {'title': req.query.title, 'book': data});
+    })
 })
 
 app.get('/delete', (req, res) => {
-  let data = routes.deleteOne(req.query.title);
-  res.render('home', {"title":req.query.title, "books": data})
+  dbMethods.deleteOne(req.query.title);
+  dbMethods.getAll()
+    .then((items, title) => {
+      res.render('home', {'title': req.query.title, 'books': items})
+  })
 })
 
-app.get('/add', (req, res) => {
-  let addition = {
-    "title" : req.query.title,
-    "author" : req.query.author,
-    "genre" : req.query.genre
-  }
-  let data = routes.addBook(addition);
-  // console.log(data)
-  res.render('home', {'books': data.data, 'msg': data.msg});
+app.post('/add', (req,res) => {
+  dbMethods.addBook(req.body);
+  let msg = "You have added or updated " + req.body.title + " to the database.";
+  dbMethods.getAll()
+    .then((items) => {
+      res.render('home', {'books': items, 'msg': msg});
+  })
 })
+
+
+//KEEP AS BACKUP - WORKS FINE
+// app.get('/add', (req, res) => {
+//   let addition = {
+//     'title': req.query.title,
+//     'author': req.query.author,
+//     'genre': req.query.genre
+//   }
+//   dbMethods.addBook(addition)
+//   let msg = "You have added or updated " + req.query.title + " in the database. Check it out in the link!";
+//   dbMethods.getAll().then((items, msg) => {
+//     res.render('home', {'books': items, 'msg': msg})
+//   })
+// })
 
 app.use( (req, res) => {
   res.type('text/plain');
