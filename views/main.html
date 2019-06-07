@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NodeJS Server Practice</title>
+  <link rel="stylesheet" type="text/css" href="../css/static.css">
+
+  <!-- //test paste -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <!-- Import personal React scripts -->
+  <script type="text/babel" src="App.js"></script>
+  <!-- //end test paste -->
+</head>
+<body>
+<h1>This is the main landing page</h1>
+<h3>Want to see details of a book we carry?</h3>
+<form action="/details" method='GET'>
+  <label for="title">Enter a book title: </label>
+  <input type='text' name="title">
+  <input type='submit' value="Search for me!">
+</form>
+
+<h3>Here are a list of the books we currently have in stock:</h3>
+{{#each books}}
+  <li><a href="/details/?title={{title}}">{{title}}</a></li>
+{{/each}}
+
+
+{{#if msg}}
+  {{msg}}
+{{/if}}
+
+<h3>Not seeing what you're looking for? Add a book to our data set!</h3>
+<form action="/api/v1/books/add" method="POST">
+  <label for="title">What is the book title?</label>
+  <input type="text" name="title">
+  </br>
+  <label for="author">Who wrote it?</label>
+  <input type="text" name="author">
+  </br>
+  <label for="genre">What genre is it?</label>
+  <input type="text" name="genre">
+  </br>
+  <input type="submit" value="Add me!">
+</form>
+</body>
+</html>
